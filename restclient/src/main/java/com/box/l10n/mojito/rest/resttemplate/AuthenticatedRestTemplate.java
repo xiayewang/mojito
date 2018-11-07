@@ -147,7 +147,7 @@ public class AuthenticatedRestTemplate {
                 uri.append(resttemplateConfig.getContextPath());
             }
 
-            uri.append("/").append(resourcePath);
+            uri.append(resourcePath.startsWith("/") ? "" : "/").append(resourcePath);
         }
 
         return uri.toString();

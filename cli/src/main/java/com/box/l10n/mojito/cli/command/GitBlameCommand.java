@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.fusesource.jansi.Ansi.Color.CYAN;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
@@ -270,6 +272,7 @@ public class GitBlameCommand extends Command {
             gitBlame.setAuthorEmail(blameResultForFile.getSourceAuthor(lineNumber).getEmailAddress());
             gitBlame.setCommitName(blameResultForFile.getSourceCommit(lineNumber).getName());
             gitBlame.setCommitTime(Integer.toString(blameResultForFile.getSourceCommit(lineNumber).getCommitTime()));
+            gitBlame.setPullRequestId(getPullRequestId(blameResultForFile.getSourceCommit(lineNumber).getFullMessage()));
         } catch (ArrayIndexOutOfBoundsException e) {
             String msg = MessageFormat.format("The line: {0} is not availalbe in the file anymore", lineNumber);
             logger.debug(msg);
@@ -442,6 +445,19 @@ public class GitBlameCommand extends Command {
         NONE,
         ALL,
         NO_INFO
+    }
+    /**
+     * Extract pull request id from commit message
+     */
+
+    String getPullRequestId(String fullMessage) {
+        for(String s: fullMessage.split("\n")) {
+            Matcher m = Pattern.compile(".*https://phabricator.pinadmin.com/D(\\d+)\\D*").matcher(s);
+            if(m.find()) {
+                return m.group(1);
+            }
+        }
+        return null;
     }
 
 }

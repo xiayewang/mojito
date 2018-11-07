@@ -3,28 +3,34 @@ import _ from "lodash";
 
 import React from "react";
 import { withRouter } from "react-router";
-
+import {FormattedMessage, FormattedNumber} from 'react-intl';
 
 import FluxyMixin from "alt-mixins/FluxyMixin";
 
-import LocalesDropdown from "./LocalesDropdown";
+import LocalesDropdown from "../workbench/LocalesDropdown";
 
+import RepositoryActions from "../../actions/RepositoryActions";
+import RepositoryDropDown from "../workbench/RepositoryDropdown";
+import RepositoryStore from "../../stores/RepositoryStore";
 
-import RepositoryDropDown from "./RepositoryDropdown";
-
-import SearchText from "./SearchText"
-import SearchResults from "./SearchResults";
-import StatusDropdown from "./StatusDropdown";
+import SearchResults from "../workbench/SearchResults";
+import StatusDropdown from "../workbench/StatusDropdown";
+import SearchText from "../workbench/SearchText";
 import SearchParamsStore from "../../stores/workbench/SearchParamsStore";
+import SearchConstants from "../../utils/SearchConstants";
 
+import WorkbenchActions from "../../actions/workbench/WorkbenchActions";
 
 import LocationHistory from "../../utils/LocationHistory";
 import AltContainer from "alt-container";
 import GitBlameStore from "../../stores/workbench/GitBlameStore";
-import GitBlameInfoModal from "./GitBlameInfoModal";
 import GitBlameActions from "../../actions/workbench/GitBlameActions.js";
+import GitBlameInfoModal from "../workbench/GitBlameInfoModal";
 
-let Workbench = React.createClass({
+import PullRequestSearchText from "./PullRequestSearchText";
+
+
+let PullRequest = React.createClass({
 
     mixins: [FluxyMixin],
 
@@ -47,7 +53,7 @@ let Workbench = React.createClass({
     onGitBlameStoreUpdated(store) {
         this.setState({"isShowGitBlameModal": store.show});
     },
-    
+
     /**
      * Updates the browser location based to reflect search
      *
@@ -57,7 +63,7 @@ let Workbench = React.createClass({
      * @param {object} searchParams The SearchParamsStore state
      */
     updateLocationForSearchParam(searchParams) {
-        LocationHistory.updateLocation(this.props.router, "/workbench", searchParams);
+        LocationHistory.updateLocation(this.props.router, "/pull-requests", searchParams);
     },
 
     /**
@@ -84,15 +90,15 @@ let Workbench = React.createClass({
         return (
             <div>
                 <div className="pull-left">
-                    <RepositoryDropDown />
-                    <LocalesDropdown />
+                    <RepositoryDropDown/>
+                    <LocalesDropdown/>
                 </div>
 
-                <SearchText />
-                <StatusDropdown />
+                <PullRequestSearchText/>
+                <StatusDropdown/>
 
                 <div className="mtl mbl">
-                    <SearchResults />
+                    <SearchResults/>
                 </div>
                 <AltContainer store={GitBlameStore}>
                     <GitBlameInfoModal onCloseModal={GitBlameActions.close}/>
@@ -103,4 +109,4 @@ let Workbench = React.createClass({
     }
 });
 
-export default withRouter(Workbench);
+export default withRouter(PullRequest);

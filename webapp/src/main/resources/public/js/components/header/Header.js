@@ -76,6 +76,10 @@ let Header = React.createClass({
                             if (this.props.router.isActive("/workbench")) {
                                 this.updateSearchParamsForDefaultView();
                             }}}><NavItem><FormattedMessage id="header.workbench" /></NavItem></LinkContainer>
+                    <LinkContainer to="/pull-requests" onClick={() => {
+                        if (this.props.router.isActive("/pull-requests")) {
+                            this.updateSearchParamsForDefaultView();
+                        }}}><NavItem><FormattedMessage id="header.pullRequest" /></NavItem></LinkContainer>
                     <LinkContainer to="/project-requests"><NavItem><FormattedMessage id="header.projectRequests" /></NavItem></LinkContainer>
                     <LinkContainer to="/screenshots" onClick={() => {
                                 if (this.props.router.isActive("/screenshots")) {
