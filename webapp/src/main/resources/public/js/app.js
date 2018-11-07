@@ -13,6 +13,7 @@ import Main from "./components/Main";
 import Login from "./components/Login";
 import Workbench from "./components/workbench/Workbench";
 import Repositories from "./components/repositories/Repositories";
+import PullRequest from  "./components/pullRequest/PullRequest";
 import Drops from "./components/drops/Drops";
 import ScreenshotsPage from "./components/screenshots/ScreenshotsPage";
 import Settings from "./components/settings/Settings";
@@ -110,6 +111,8 @@ function startApp(messages) {
                                 <Route path="repositories" component={Repositories}
                                        onEnter={getAllRepositoriesDeffered}/>
                                 <Route path="project-requests" component={Drops}/>
+                                <Route path="pull-requests" component={PullRequest}
+                                       onEnter={getAllRepositoriesDeffered}/>
                                 <Route path="screenshots" component={ScreenshotsPage}
                                        onEnter={onEnterScreenshots}
                                        onLeave={ScreenshotsPageActions.resetScreenshotSearchParams}/>

@@ -25,6 +25,7 @@ class SearchParamsStore {
 
         this.searchText = "";
         this.searchAttribute = SearchParamsStore.SEARCH_ATTRIBUTES.TARGET;
+        this.pullRequestSearchAttribute = SearchParamsStore.PULL_REQUEST_SEARCH_ATTRIBUTES.PULL_REQUEST_ID;
         this.searchType = SearchParamsStore.SEARCH_TYPES.CONTAINS;
 
         this.pluralFormOther = null;
@@ -92,6 +93,7 @@ class SearchParamsStore {
                 this.setFirstPageAsCurrent();
                 this.searchText = paramData.data.searchText;
                 this.searchAttribute = paramData.data.searchAttribute;
+                this.pullRequestSearchAttribute = paramData.data.pullRequestSearchAttribute;
                 this.searchType = paramData.data.searchType;
                 break;
 
@@ -165,6 +167,7 @@ class SearchParamsStore {
      * @param {string[]} bcp47Tags
      * @param {string} searchText
      * @param {string} searchAttribute
+     * @param {string} pullRequestSearchAttribute
      * @param {string} searchType
      * @param {SearchParamsStore.STATUS} status
      * @param {bool} used
@@ -175,7 +178,8 @@ class SearchParamsStore {
      */
     updateAllParameters( {
     repoIds = null, repoNames = null, bcp47Tags = null, searchText = null,
-            searchAttribute = null, searchType = null, status = null, used = null,
+            searchAttribute = null, pullRequestSearchAttribute = null,
+                             searchType = null, status = null, used = null,
             unUsed = null, pageSize = null, currentPageNumber = null,
             pageOffset = null, pluralFormOther = null, translate = null, 
             doNotTranslate = null, tmTextUnitCreatedBefore = null, tmTextUnitCreatedAfter = null
@@ -205,6 +209,9 @@ class SearchParamsStore {
 
         if (searchAttribute !== null)
             this.searchAttribute = searchAttribute;
+
+        if (pullRequestSearchAttribute !== null)
+            this.pullRequestSearchAttribute = pullRequestSearchAttribute;
 
         if (searchType !== null)
             this.searchType = searchType;
@@ -254,7 +261,7 @@ class SearchParamsStore {
     static convertQueryToSearchParams(query) {
 
         let {
-            searchAttribute, searchText, searchType,
+            searchAttribute, searchText, pullRequestSearchAttribute, searchType,
             status, used, unUsed, translate, doNotTranslate, tmTextUnitCreatedBefore, tmTextUnitCreatedAfter,
             pageSize, currentPageNumber, pageOffset,
             pluralFormOther} = query;
@@ -285,6 +292,7 @@ class SearchParamsStore {
             "repoNames": typeof repoNames !== "undefined" ? repoNames : null,
             "bcp47Tags": typeof bcp47Tags !== "undefined" ? bcp47Tags : null,
             "searchAttribute": typeof searchAttribute !== "undefined" ? searchAttribute : null,
+            "pullRequestSearchAttribute": typeof pullRequestSearchAttribute !== "undefined" ? pullRequestSearchAttribute : null,
             "searchText": typeof searchText !== "undefined" ? searchText : null,
             "searchType": typeof searchType !== "undefined" ? searchType : null,
             "status": typeof status !== "undefined" ? status : null,
@@ -364,6 +372,11 @@ SearchParamsStore.SEARCH_ATTRIBUTES = {
     "ASSET": "asset",
     "PLURAL_FORM_OTHER": "pluralFormOther"
 };
+
+SearchParamsStore.PULL_REQUEST_SEARCH_ATTRIBUTES = {
+    "PULL_REQUEST_ID": "pullRequestId",
+    "AUTHOR_NAME": "authorName"
+}
 
 SearchParamsStore.STATUS = {
     /**
