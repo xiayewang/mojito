@@ -3,6 +3,7 @@ package com.box.l10n.mojito.service.tm;
 import com.box.l10n.mojito.entity.Asset;
 import com.box.l10n.mojito.entity.TM;
 import com.box.l10n.mojito.entity.TMTextUnit;
+import com.box.l10n.mojito.entity.security.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -28,6 +29,7 @@ public interface TMTextUnitRepository extends JpaRepository<TMTextUnit, Long> {
 
     List<TMTextUnit> findByAsset(Asset asset);
     List<TMTextUnit> findByAssetId(Long assetId);
+    List<TMTextUnit> findByCreatedByUser(User user);
 
     @Query("select new com.box.l10n.mojito.service.tm.TextUnitIdMd5DTO(tu.id, tu.md5) from TMTextUnit tu where tu.asset.id = ?1")
     List<TextUnitIdMd5DTO> getTextUnitIdMd5DTOByAssetId(Long assetId);

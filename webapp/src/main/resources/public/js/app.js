@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {Router, Route, IndexRoute, useRouterHistory} from "react-router";
 import { createHistory } from 'history'
-        import {Modal, Button} from "react-bootstrap";
+import {Modal, Button} from "react-bootstrap";
 import {FormattedMessage, IntlProvider, addLocaleData} from "react-intl";
 import {AppConfig} from "./utils/AppConfig";
 import App from "./components/App";
@@ -13,6 +13,7 @@ import Main from "./components/Main";
 import Login from "./components/Login";
 import Workbench from "./components/workbench/Workbench";
 import Repositories from "./components/repositories/Repositories";
+import Dashboard from "./components/dashboard/Dashboard";
 import Drops from "./components/drops/Drops";
 import ScreenshotsPage from "./components/screenshots/ScreenshotsPage";
 import Settings from "./components/settings/Settings";
@@ -43,6 +44,7 @@ import it from 'react-intl/locale-data/it';
 import ja from 'react-intl/locale-data/ja';
 import pt from 'react-intl/locale-data/pt';
 import zh from 'react-intl/locale-data/zh';
+import DashboardActions from "./actions/DashboardActions";
 addLocaleData([...en, ...fr, ...be, ...ko, ...ru, ...de, ...es, ...it, ...ja, ...pt, ...zh]);
 
 __webpack_public_path__ = CONTEXT_PATH + "/";
@@ -110,6 +112,8 @@ function startApp(messages) {
                                 <Route path="repositories" component={Repositories}
                                        onEnter={getAllRepositoriesDeffered}/>
                                 <Route path="project-requests" component={Drops}/>
+                                <Route path="dashboard" component={Dashboard}
+                                        onEnter={getAllRepositoriesDeffered()}/>
                                 <Route path="screenshots" component={ScreenshotsPage}
                                        onEnter={onEnterScreenshots}
                                        onLeave={ScreenshotsPageActions.resetScreenshotSearchParams}/>
@@ -143,25 +147,25 @@ function startApp(messages) {
             }
         }
 
-        ReactDOM.render(
-                <IntlProvider locale={LOCALE} messages={messages}>
-                    <Modal show={true}>
-                        <Modal.Header closeButton={true}>
-                            <Modal.Title>
-                                <FormattedMessage id="error.modal.header.title" />
-                            </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <FormattedMessage id="error.modal.message.loggedOut" />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button bsStyle="primary" onClick={okOnClick}>
-                                <FormattedMessage id="label.okay" />
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </IntlProvider>
-                , document.getElementById(containerId));
+        // ReactDOM.render(
+        //         <IntlProvider locale={LOCALE} messages={messages}>
+        //             <Modal show={true}>
+        //                 <Modal.Header closeButton={true}>
+        //                     <Modal.Title>
+        //                         <FormattedMessage id="error.modal.header.title" />
+        //                     </Modal.Title>
+        //                 </Modal.Header>
+        //                 <Modal.Body>
+        //                     <FormattedMessage id="error.modal.message.loggedOut" />
+        //                 </Modal.Body>
+        //                 <Modal.Footer>
+        //                     <Button bsStyle="primary" onClick={okOnClick}>
+        //                         <FormattedMessage id="label.okay" />
+        //                     </Button>
+        //                 </Modal.Footer>
+        //             </Modal>
+        //         </IntlProvider>
+        //         , document.getElementById(containerId));
     };
 
 }
@@ -181,6 +185,12 @@ function onLeaveWorkbench() {
 function getAllRepositoriesDeffered() {
     setTimeout(() => {
         RepositoryActions.getAllRepositories();
+    }, 1);
+}
+
+function getBranchDeffered() {
+    setTimeout(() => {
+        DashboardActions.getBranches();
     }, 1);
 }
 

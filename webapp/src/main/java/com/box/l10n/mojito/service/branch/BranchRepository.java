@@ -14,4 +14,6 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface BranchRepository extends JpaRepository<Branch, Long>, JpaSpecificationExecutor<Branch> {
     Branch findByNameAndRepository(String name, Repository repository);
+
+    List<Branch> findByName(String name);
 }

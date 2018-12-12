@@ -119,6 +119,7 @@ public class TextUnitWS {
             @RequestParam(value = "target", required = false) String target,
             @RequestParam(value = "assetPath", required = false) String assetPath,
             @RequestParam(value = "pluralFormOther", required = false) String pluralFormOther,
+            @RequestParam(value = "branchName", required = false) String branchName,
             @RequestParam(value = "pluralFormFiltered", required = false, defaultValue = "true") boolean pluralFormFiltered,
             @RequestParam(value = "searchType", required = false, defaultValue = "EXACT") SearchType searchType,
             @RequestParam(value = "localeTags[]", required = false) ArrayList<String> localeTags,
@@ -131,7 +132,7 @@ public class TextUnitWS {
             @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset) throws InvalidTextUnitSearchParameterException {
 
         TextUnitSearcherParameters textUnitSearcherParameters = queryParamsToTextUnitSearcherParameters(repositoryIds,
-                repositoryNames, name, source, target, assetPath, pluralFormOther, pluralFormFiltered, searchType, localeTags, usedFilter, statusFilter, doNotTranslateFilter, tmTextUnitCreatedBefore, tmTextUnitCreatedAfter);
+                repositoryNames, name, source, target, assetPath, pluralFormOther, branchName, pluralFormFiltered, searchType, localeTags, usedFilter, statusFilter, doNotTranslateFilter, tmTextUnitCreatedBefore, tmTextUnitCreatedAfter);
         textUnitSearcherParameters.setLimit(limit);
         textUnitSearcherParameters.setOffset(offset);
         List<TextUnitDTO> search = textUnitSearcher.search(textUnitSearcherParameters);
@@ -149,6 +150,7 @@ public class TextUnitWS {
             @RequestParam(value = "target", required = false) String target,
             @RequestParam(value = "assetPath", required = false) String assetPath,
             @RequestParam(value = "pluralFormOther", required = false) String pluralFormOther,
+            @RequestParam(value = "branchName", required = false) String branchName,
             @RequestParam(value = "pluralFormFiltered", required = false, defaultValue = "true") boolean pluralFormFiltered,
             @RequestParam(value = "searchType", required = false, defaultValue = "EXACT") SearchType searchType,
             @RequestParam(value = "localeTags[]", required = false) ArrayList<String> localeTags,
@@ -160,7 +162,7 @@ public class TextUnitWS {
 
         TextUnitSearcherParameters textUnitSearcherParameters = queryParamsToTextUnitSearcherParameters(
                 repositoryIds, repositoryNames, name, source, target,
-                assetPath, pluralFormOther, pluralFormFiltered, searchType,
+                assetPath, pluralFormOther, branchName, pluralFormFiltered, searchType,
                 localeTags, usedFilter, statusFilter, doNotTranslateFilter,
                 tmTextUnitCreatedBefore, tmTextUnitCreatedAfter);
 
@@ -176,6 +178,7 @@ public class TextUnitWS {
             String target,
             String assetPath,
             String pluralFormOther,
+            String branchName,
             boolean pluralFormFiltered,
             SearchType searchType,
             ArrayList<String> localeTags,
@@ -198,6 +201,7 @@ public class TextUnitWS {
         textUnitSearcherParameters.setTarget(target);
         textUnitSearcherParameters.setAssetPath(assetPath);
         textUnitSearcherParameters.setPluralFormOther(pluralFormOther);
+        textUnitSearcherParameters.setBranchName(branchName);
         textUnitSearcherParameters.setPluralFormsFiltered(pluralFormFiltered);
         textUnitSearcherParameters.setSearchType(searchType);
         textUnitSearcherParameters.setRootLocaleExcluded(false);

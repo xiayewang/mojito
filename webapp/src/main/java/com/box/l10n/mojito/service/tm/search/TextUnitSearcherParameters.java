@@ -18,6 +18,7 @@ public class TextUnitSearcherParameters {
     String target;
     String assetPath;
     String pluralFormOther;
+    String branchName;
     SearchType searchType;
     List<Long> repositoryIds;
     List<String> repositoryNames;
@@ -203,6 +204,14 @@ public class TextUnitSearcherParameters {
 
     public void setPluralFormOther(String pluralFormOther) {
         this.pluralFormOther = pluralFormOther;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
     }
 
     public List<String> getRepositoryNames() {
