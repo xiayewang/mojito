@@ -8,7 +8,7 @@ class DashboardClient extends BaseClient {
 
 
     getEntityName() {
-        return 'dashboard';
+        return 'branchStatistics';
     }
 };
 

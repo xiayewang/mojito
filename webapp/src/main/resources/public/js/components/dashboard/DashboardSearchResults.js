@@ -1,22 +1,62 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import FluxyMixin from "alt-mixins/FluxyMixin";
 import {injectIntl} from "react-intl";
 import {Table} from "react-bootstrap";
 import RepositoryHeaderColumn from "../repositories/RepositoryHeaderColumn";
-import DashboardStore from "../../stores/Dashboard/DashboardStore";
 import DashboardRow from "./DashboardRow";
 
-class DashboardSearchResults extends React.Component{
+class DashboardSearchResults extends React.Component {
 
     static propTypes = {
-        "dashboardRows": PropTypes.array
-    }
+        "dashboardRows": PropTypes.array.isRequired,
+        "isTextUnitOpen": PropTypes.array.isRequired,
+        "isScreenshotOpen": PropTypes.array.isRequired,
+        "textUnitSelectedForScreenshot": PropTypes.array.isRequired,
+        "onUploadImageClick": PropTypes.func.isRequired,
+        "onTextUnitForScreenshotUploadClick": PropTypes.func.isRequired,
+        "onTextunitCollapseClick": PropTypes.func.isRequired,
+        "onScreenshotCollapseClick": PropTypes.func.isRequired,
+        "onChooseImageClick": PropTypes.func.isRequired,
+    };
 
-    getTableRow(rowData) {
-        return (
-            <DashboardRow key={rowData.branch.id} rowData={rowData} ref={"dashboardRow" + rowData.branch.id}/>
-        )
+    getTableRows() {
+        let dashboardRows = [];
+        for (let i = 0; i < this.props.dashboardRows.length; i++) {
+            dashboardRows.push(
+                <DashboardRow
+                    dashboardRow={this.props.dashboardRows[i]}
+                    isTextUnitOpen={this.props.isTextUnitOpen[i]}
+                    isScreenshotOpen={this.props.isScreenshotOpen[i]}
+                    textUnitSelectedForScreenshot={this.props.textUnitSelectedForScreenshot[i]}
+                    onUploadImageClick={
+                        () => {
+                            this.props.onUploadImageClick(i)
+                        }
+                    }
+                    onTextUnitForScreenshotUploadClick={
+                        (index) => {
+                            this.props.onTextUnitForScreenshotUploadClick({index0: i, index1: index})
+                        }
+                    }
+                    onTextunitCollapseClick={
+                        () => {
+                            this.props.onTextunitCollapseClick(i)
+                        }
+                    }
+                    onScreenshotCollapseClick={
+                        () => {
+                            this.props.onScreenshotCollapseClick(i)
+                        }
+                    }
+                    onChooseImageClick={
+                        (image) => {
+                            this.props.onChooseImageClick({index: i, imageInfo: image})
+                        }
+                    }
+                />
+            )
+        }
+        return dashboardRows;
     }
 
     render() {
@@ -35,13 +75,13 @@ class DashboardSearchResults extends React.Component{
                     </tr>
                     </thead>
                     <tbody>
-                    {this.props.dashboardRows.map(this.getTableRow)}
+                    {this.getTableRows()}
                     </tbody>
                 </Table>
             </div>
         );
     }
 
-};
+}
 
 export default injectIntl(DashboardSearchResults);

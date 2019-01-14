@@ -7,7 +7,14 @@ class DashboardPageActions {
             "updateSearchParams",
             "getBranches",
             "getBranchesSuccess",
-            "getBranchesError"
+            "getBranchesError",
+            "uploadScreenshotImage",
+            "uploadScreenshotImageSuccess",
+            "uploadScreenshotImageError",
+            "textUnitForScreenshotUploadChanged",
+            "onTextunitCollapseChange",
+            "onScreenshotCollapseChange",
+            "onImageChoose"
         );
     }
 }

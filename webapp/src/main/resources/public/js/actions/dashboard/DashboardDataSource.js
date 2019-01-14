@@ -2,6 +2,7 @@ import DashboardClient from "../../sdk/DashboardClient";
 import DashboardPageActions from "./DashboardPageActions";
 import DashboardSearcherParameters from "../../sdk/DashboardSearcherParameters";
 import DashboardSearchParamStore from "../../stores/Dashboard/DashboardSearchParamStore";
+import DashboardStore from "../../stores/Dashboard/DashboardStore";
 
 const DashboardDataSource = {
     performDashboardSearch: {
@@ -28,6 +29,16 @@ const DashboardDataSource = {
         success: DashboardPageActions.getBranchesSuccess,
         error: DashboardPageActions.getBranchesError
 
+    },
+
+    performUploadScreenshot: {
+        remote(dashboardStoreState ,index) {
+            //TODO: ImageWS
+            let image = dashboardStoreState.images[index];
+            return null;
+        },
+        success: DashboardPageActions.uploadScreenshotImageSuccess,
+        error: DashboardPageActions.uploadScreenshotImageError
     }
 };
 

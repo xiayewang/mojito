@@ -41,7 +41,23 @@ class Dashboard extends React.Component {
                 </AltContainer>
 
                 <AltContainer store={DashboardStore}>
-                    <DashboardSearchResults/>
+                    <DashboardSearchResults
+                        onUploadImageClick={(index) => {
+                            DashboardPageActions.uploadScreenshotImage(index);
+                        }}
+                        onChooseImageClick={(image) => {
+                            DashboardPageActions.onImageChoose(image);
+                        }}
+                        onTextUnitForScreenshotUploadClick={(indexTuple) => {
+                            DashboardPageActions.textUnitForScreenshotUploadChanged(indexTuple);
+                        }}
+                        onTextunitCollapseClick={(index) => {
+                            DashboardPageActions.onTextunitCollapseChange(index);
+                        }}
+                        onScreenshotCollapseClick={(index) => {
+                            DashboardPageActions.onScreenshotCollapseChange(index);
+                        }}
+                    />
                 </AltContainer>
             </div>
         );
