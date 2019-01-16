@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Collapse, Glyphicon, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Button, Collapse, Glyphicon, Grid, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {Link} from "react-router";
 import {FormattedMessage, FormattedNumber} from "react-intl";
 import WorkbenchActions from "../../actions/workbench/WorkbenchActions";
@@ -126,11 +126,7 @@ class DashboardRow extends React.Component {
                 <Collapse in={this.props.isScreenshotOpen}>
                     <div>
                         {uploadImageForTextunits}
-                        <ImageUpload onChooseImageClick={
-                            (image) => {
-                                this.props.onChooseImageClick(image)
-                            }
-                        }/>
+
                         <Button onClick={() => this.props.onUploadImageClick()}>
                             Submit
                         </Button>
@@ -143,14 +139,22 @@ class DashboardRow extends React.Component {
 
     render() {
 
-      return (
-          <tr className={"row-active"}>
-              <td>{this.createTextUnitsCollapsible()}</td>
-              <td>{this.getNeedsTranslationLabel()}</td>
-              <td>{this.getScreenshotLabel()}</td>
-              <td>{this.getAddScreenshotButton()}</td>
-          </tr>
-      )
+      // return (
+      //     <tr className={"row-active"}>
+      //         <td>{this.createTextUnitsCollapsible()}</td>
+      //         <td>{this.getNeedsTranslationLabel()}</td>
+      //         <td>{this.getScreenshotLabel()}</td>
+      //         <td>{this.getAddScreenshotButton()}</td>
+      //     </tr>
+      // )
+        return (
+            <tr className={"row-active"}>
+                <td>{this.createTextUnitsCollapsible()}</td>
+                <td>{this.getNeedsTranslationLabel()}</td>
+                <td>{this.getScreenshotLabel()}</td>
+                <td>{this.getAddScreenshotButton()}</td>
+            </tr>
+        )
     }
 
 }

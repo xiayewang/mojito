@@ -2,7 +2,9 @@ import DashboardClient from "../../sdk/DashboardClient";
 import DashboardPageActions from "./DashboardPageActions";
 import DashboardSearcherParameters from "../../sdk/DashboardSearcherParameters";
 import DashboardSearchParamStore from "../../stores/Dashboard/DashboardSearchParamStore";
-import DashboardStore from "../../stores/Dashboard/DashboardStore";
+import ImageClient from "../../sdk/ImageClient";
+import ScreenshotClient from "../../sdk/ScreenshotClient";
+import ScreenshotRun from "../../sdk/entity/ScreenshotRun";
 
 const DashboardDataSource = {
     performDashboardSearch: {
@@ -31,14 +33,25 @@ const DashboardDataSource = {
 
     },
 
-    performUploadScreenshot: {
+    performUploadScreenshotImage: {
         remote(dashboardStoreState ,index) {
-            //TODO: ImageWS
             let image = dashboardStoreState.images[index];
-            return null;
+            // TODO: get imageName and imageContent
+            let imageName = image.file.name;
+            let imageContent = image.imagePreviewUrl;
+            return ImageClient.uploadImage(imageName, imageContent);
         },
         success: DashboardPageActions.uploadScreenshotImageSuccess,
         error: DashboardPageActions.uploadScreenshotImageError
+    },
+
+    performUploadScreenshot: {
+        remote(dashboardStoreState) {
+            let screenshotRun = ScreenshotRun.branchStatisticsToScreenshotRun(dashboardStoreState.dashboardRows[dashboardStoreState.uploadingIndex], dashboardStoreState.images[dashboardStoreState.uploadingIndex]);
+            return ScreenshotClient.createOrUpdateScreenshotRun(screenshotRun)
+        },
+        success: DashboardPageActions.uploadScreenshotSuccess,
+        error: DashboardPageActions.uploadScreenshotError
     }
 };
 

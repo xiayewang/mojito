@@ -19,8 +19,9 @@ class DashboardStore {
     setDefaultState() {
         this.dashboardRows = [];
         this.searching = false;
+        this.uploadingIndex = -1;
         this.images = [];
-        this.screenshots = [];
+        this.screenshotUploaded = [];
         this.textUnitSelectedForScreenshot = [];
         this.isTextUnitOpen = [];
         this.isScreenshotOpen = [];
@@ -72,15 +73,40 @@ class DashboardStore {
     }
 
     uploadScreenshotImage(index) {
-        this.getInstance().performUploadScreenshot(index);
+        this.uploadingIndex = index;
+        this.getInstance().performUploadScreenshotImage(index);
     }
 
-    uploadScreenshotImageSuccess(screenshots) {
-        // TODO: save screenshots
+    uploadScreenshotImageSuccess() {
+        // TODO: set imageUrl to this.images[this.uploadingIndex]
+        this.getInstance().performUploadScreenshot();
+        this.images[this.uploadingIndex] = '/api/images/testing'
     }
 
     uploadScreenshotImageError() {
         // TODO: show upload failure
+        this.resetCheckMark();
+        this.uploadingIndex = -1;
+    }
+
+    uploadScreenshotSuccess() {
+        for(let i = 0; i < this.textUnitSelectedForScreenshot[this.uploadingIndex].length; i++) {
+            if(this.textUnitSelectedForScreenshot[this.uploadingIndex][i]) {
+                this.screenshotUploaded[this.uploadingIndex][i] = true;
+            }
+        }
+        this.resetCheckMark();
+        this.uploadingIndex = -1;
+    }
+
+    uploadScreenshotError() {
+        // TODO: show upload failure
+        this.resetCheckMark();
+        this.uploadingIndex = -1;
+    }
+
+    resetCheckMark() {
+        this.textUnitSelectedForScreenshot[this.uploadingIndex].fill(false);
     }
 }
 
