@@ -48,14 +48,17 @@ class Dashboard extends React.Component {
                         onChooseImageClick={(image) => {
                             DashboardPageActions.onImageChoose(image);
                         }}
-                        onTextUnitForScreenshotUploadClick={(indexTuple) => {
-                            DashboardPageActions.textUnitForScreenshotUploadChanged(indexTuple);
+                        onTextUnitCheckboxClick={(indexTuple) => {
+                            DashboardPageActions.textUnitCheckboxChanged(indexTuple);
                         }}
-                        onTextunitCollapseClick={(index) => {
-                            DashboardPageActions.onTextunitCollapseChange(index);
+                        onBranchCollapseClick={(index) => {
+                            DashboardPageActions.onBranchCollapseChange(index);
                         }}
-                        onScreenshotCollapseClick={(index) => {
-                            DashboardPageActions.onScreenshotCollapseChange(index);
+                        openScreenshotUploadModal={() => {
+                            DashboardPageActions.onScreenshotUploadModalOpen();
+                        }}
+                        closeScreenshotUploadModal={() => {
+                            DashboardPageActions.onScreenshotUploadModalClose();
                         }}
                     />
                 </AltContainer>

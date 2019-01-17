@@ -1,84 +1,134 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {injectIntl} from "react-intl";
-import {Table} from "react-bootstrap";
+import {FormattedMessage, injectIntl} from "react-intl";
+import {Button, ButtonToolbar, Table} from "react-bootstrap";
 import RepositoryHeaderColumn from "../repositories/RepositoryHeaderColumn";
-import DashboardRow from "./DashboardRow";
+import BranchStatistic from "./BranchStatistic";
+import ScreenshotUploadModal from "./ScreenshotUploadModal";
+import TextUnitSelector from "./TextUnitSelector";
+import DashboardPageActions from "../../actions/dashboard/DashboardPageActions";
+import DashboardStore from "../../stores/Dashboard/DashboardStore";
+import WorkbenchActions from "../../actions/workbench/WorkbenchActions";
+import SearchConstants from "../../utils/SearchConstants";
 
 class DashboardSearchResults extends React.Component {
 
     static propTypes = {
-        "dashboardRows": PropTypes.array.isRequired,
-        "isTextUnitOpen": PropTypes.array.isRequired,
-        "isScreenshotOpen": PropTypes.array.isRequired,
-        "textUnitSelectedForScreenshot": PropTypes.array.isRequired,
-        "onUploadImageClick": PropTypes.func.isRequired,
-        "onTextUnitForScreenshotUploadClick": PropTypes.func.isRequired,
-        "onTextunitCollapseClick": PropTypes.func.isRequired,
-        "onScreenshotCollapseClick": PropTypes.func.isRequired,
+        "currentPageNumber": PropTypes.number.isRequired,
+        "showScreenshotUploadModal": PropTypes.bool.isRequired,
+        "branchStatistics": PropTypes.array.isRequired,
+        "isBranchOpen": PropTypes.array.isRequired,
+        "textUnitChecked": PropTypes.array.isRequired,
+        "onTextUnitCheckboxClick": PropTypes.func.isRequired,
+        "onBranchCollapseClick": PropTypes.func.isRequired,
         "onChooseImageClick": PropTypes.func.isRequired,
+        "onUploadImageClick": PropTypes.func.isRequired,
+        "openScreenshotUploadModal": PropTypes.func.isRequired,
+        "closeScreenshotUploadModal": PropTypes.func.isRequired,
     };
 
-    getTableRows() {
-        let dashboardRows = [];
-        for (let i = 0; i < this.props.dashboardRows.length; i++) {
-            dashboardRows.push(
-                <DashboardRow
-                    dashboardRow={this.props.dashboardRows[i]}
-                    isTextUnitOpen={this.props.isTextUnitOpen[i]}
-                    isScreenshotOpen={this.props.isScreenshotOpen[i]}
-                    textUnitSelectedForScreenshot={this.props.textUnitSelectedForScreenshot[i]}
-                    onUploadImageClick={
-                        () => {
-                            this.props.onUploadImageClick(i)
-                        }
+
+
+
+
+    createBranchStatisticComponent(branchStatistic, arrayIndex) {
+        return (
+            <BranchStatistic
+                branchStatistic={branchStatistic}
+                isBranchOpen={this.props.isBranchOpen[arrayIndex]}
+                textUnitChecked={this.props.textUnitChecked[arrayIndex]}
+                onUploadImageClick={
+                    () => {
+                        this.props.onUploadImageClick(arrayIndex)
                     }
-                    onTextUnitForScreenshotUploadClick={
-                        (index) => {
-                            this.props.onTextUnitForScreenshotUploadClick({index0: i, index1: index})
-                        }
+                }
+                onTextUnitForScreenshotUploadClick={
+                    (index) => {
+                        this.props.onTextUnitCheckboxClick({index0: arrayIndex, index1: index})
                     }
-                    onTextunitCollapseClick={
-                        () => {
-                            this.props.onTextunitCollapseClick(i)
-                        }
+                }
+                onBranchCollapseClick={
+                    () => {
+                        this.props.onBranchCollapseClick(arrayIndex)
                     }
-                    onScreenshotCollapseClick={
-                        () => {
-                            this.props.onScreenshotCollapseClick(i)
-                        }
-                    }
-                    onChooseImageClick={
-                        (image) => {
-                            this.props.onChooseImageClick({index: i, imageInfo: image})
-                        }
-                    }
-                />
-            )
+                }
+            />
+        )
+
+    }
+
+    onFetchPreviousPageClicked() {
+
+        if (this.props.currentPageNumber > 1) {
+
         }
-        return dashboardRows;
     }
 
     render() {
+        let actionButtonsDisabled = this.props.textUnitChecked.every(function (row) {
+            return row.every(function (e) {
+                return !e;
+            })
+
+        });
+        let previousPageButtonDisabled = DashboardStore.getState().hasNext;
+        let nextPageButtonDisabled = DashboardStore.getState().hasPrevious;
 
         return (
-            <div className="plx prx">
-                <Table className="repo-table table-padded-sides">
-                    <thead>
-                    <tr>
-                        <RepositoryHeaderColumn className="col-md-3"
-                                                columnNameMessageId="repositories.table.header.name"/>
-                        <RepositoryHeaderColumn className="col-md-3"
-                                                columnNameMessageId="repositories.table.header.needsTranslation"/>
-                        <RepositoryHeaderColumn className="col-md-3"
-                                                columnNameMessageId="dashboard.table.header.screenshot"/>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.getTableRows()}
-                    </tbody>
-                </Table>
+            <div>
+                <div>
+                    <div className="pull-left">
+                        <ButtonToolbar>
+                            <Button bsSize="small" disabled={actionButtonsDisabled}
+                                    onClick={this.props.openScreenshotUploadModal}>
+                                <FormattedMessage id="label.upload"/>
+                            </Button>
+                        </ButtonToolbar>
+                    </div>
+                    <div className="pull-right">
+                        <TextUnitSelector
+                            selectAllTextUnitsInCurrentPage={() => {
+                                DashboardPageActions.selectAllTextUnitsInCurrentPage();
+                            }}
+                            resetAllSelectedTextUnitsInCurrentPage={() => {
+                                DashboardPageActions.resetAllSelectedTextUnitsInCurrentPage();
+                            }}
+                        />
+                        <Button bsSize="small" disabled={previousPageButtonDisabled}
+                                onClick={() => {DashboardPageActions.fetchPreviousPage()}}><span
+                            className="glyphicon glyphicon-chevron-left"></span></Button>
+                        <label className="mls mrs default-label current-pageNumber">
+                            {this.props.currentPageNumber}
+                        </label>
+                        <Button bsSize="small" disabled={nextPageButtonDisabled}
+                                onClick={() => {DashboardPageActions.fetchNextPage()}}><span
+                            className="glyphicon glyphicon-chevron-right"></span></Button>
+                    </div>
+                </div>
+
+                <div className="plx prx">
+                    <Table className="repo-table table-padded-sides">
+                        <thead>
+                        <tr>
+                            <RepositoryHeaderColumn className="col-md-3"
+                                                    columnNameMessageId="repositories.table.header.name"/>
+                            <RepositoryHeaderColumn className="col-md-3"
+                                                    columnNameMessageId="repositories.table.header.needsTranslation"/>
+                            <RepositoryHeaderColumn className="col-md-3"
+                                                    columnNameMessageId="dashboard.table.header.screenshot"/>
+                        </tr>
+                        </thead>
+                    </Table>
+                    {this.props.branchStatistics.map(this.createBranchStatisticComponent.bind(this))}
+                </div>
+                <ScreenshotUploadModal
+                    showModal={this.props.showScreenshotUploadModal}
+                    closeModal={this.props.closeScreenshotUploadModal}
+                    onUploadImageClick={this.props.onUploadImageClick}
+                    onChooseImageClick={this.props.onChooseImageClick}
+                />
             </div>
+
         );
     }
 

@@ -7,7 +7,7 @@ class DashboardStore {
     constructor() {
         /**
          *
-         * @type {BranchStatistics[]}
+         * @type {branchStatistics[]}
          */
         this.setDefaultState();
 
@@ -17,14 +17,24 @@ class DashboardStore {
     }
 
     setDefaultState() {
-        this.dashboardRows = [];
+        this.hasNext= false;
+        this.hasPrevious= false;
+        this.size = 0;
+        this.currentPageNumber = 0;
+        this.first = true;
+        this.numberOfElements = 0;
+        this.totalPages = 1;
+        this.totalElements = 0;
+        this.last = true;
+        this.branchStatistics = [];
         this.searching = false;
-        this.uploadingIndex = -1;
-        this.images = [];
+        this.showScreenshotUploadModal = false;
+        this.image = null;
         this.screenshotUploaded = [];
-        this.textUnitSelectedForScreenshot = [];
-        this.isTextUnitOpen = [];
-        this.isScreenshotOpen = [];
+        this.textUnitChecked = [];
+        this.isBranchOpen = [];
+        this.numberOfTextUnitChecked = 0;
+        this.totalTextUnitsInPage = 0;
     }
 
     getBranches() {
@@ -34,79 +44,94 @@ class DashboardStore {
 
     }
 
-    getBranchesSuccess(dashboardRows) {
-        this.dashboardRows = dashboardRows;
+    getBranchesSuccess(branchStatistics) {
+        this.branchStatistics = branchStatistics;
         this.isSearching = false;
-        this.images = Array.apply(null, Array(dashboardRows.length)).map(function () {
+        this.images = Array.apply(null, Array(branchStatistics.length)).map(function () {
             return null;
         });
-        this.isTextUnitOpen = Array.apply(null, Array(dashboardRows.length)).map(function () {
+        this.isBranchOpen = Array.apply(null, Array(branchStatistics.length)).map(function () {
             return false;
         });
-        this.isScreenshotOpen = Array.apply(null, Array(dashboardRows.length)).map(function () {
-            return false;
-        });
-        for (let i = 0; i < dashboardRows.length; i++) {
+        this.totalTextUnitsInPage = 0;
+        for (let i = 0; i < branchStatistics.length; i++) {
             //TODO: update screenshot data
-            this.textUnitSelectedForScreenshot.push(Array.apply(null, Array(dashboardRows[i].branchTextUnitStatistics.length)).map(function () {
+            this.textUnitChecked.push(Array.apply(null, Array(branchStatistics[i].branchTextUnitStatistics.length)).map(function () {
                 return false
             }));
+            this.totalTextUnitsInPage += branchStatistics[i].branchTextUnitStatistics.length;
         }
 
 
     }
 
-    onTextunitCollapseChange(index) {
-        this.isTextUnitOpen[index] = !this.isTextUnitOpen[index];
+    onScreenshotUploadModalOpen() {
+        this.showScreenshotUploadModal = true;
     }
 
-    onScreenshotCollapseChange(index) {
-        this.isScreenshotOpen[index] = !this.isScreenshotOpen[index];
+    onScreenshotUploadModalClose() {
+        this.showScreenshotUploadModal = false;
     }
 
-    textUnitForScreenshotUploadChanged(index) {
-        this.textUnitSelectedForScreenshot[index.index0][index.index1] = !this.textUnitSelectedForScreenshot[index.index0][index.index1];
+    onBranchCollapseChange(index) {
+        this.isBranchOpen[index] = !this.isBranchOpen[index];
+    }
+
+    textUnitCheckboxChanged(index) {
+        this.textUnitChecked[index.index0][index.index1] = !this.textUnitChecked[index.index0][index.index1];
+        this.numberOfTextUnitChecked +=  this.textUnitChecked[index.index0][index.index1] ? 1 : -1;
     }
 
     onImageChoose(image) {
         this.images[image.index] = image.imageInfo;
     }
 
-    uploadScreenshotImage(index) {
-        this.uploadingIndex = index;
-        this.getInstance().performUploadScreenshotImage(index);
+    uploadScreenshotImage() {
+        this.getInstance().performUploadScreenshotImage();
     }
 
     uploadScreenshotImageSuccess() {
         // TODO: set imageUrl to this.images[this.uploadingIndex]
         this.getInstance().performUploadScreenshot();
-        this.images[this.uploadingIndex] = '/api/images/testing'
+        this.image.url = '/api/images/testing'
     }
 
     uploadScreenshotImageError() {
         // TODO: show upload failure
-        this.resetCheckMark();
-        this.uploadingIndex = -1;
+        this.resetAllSelectedTextUnitsInCurrentPage();
     }
 
     uploadScreenshotSuccess() {
-        for(let i = 0; i < this.textUnitSelectedForScreenshot[this.uploadingIndex].length; i++) {
-            if(this.textUnitSelectedForScreenshot[this.uploadingIndex][i]) {
-                this.screenshotUploaded[this.uploadingIndex][i] = true;
-            }
-        }
-        this.resetCheckMark();
-        this.uploadingIndex = -1;
+
     }
 
     uploadScreenshotError() {
         // TODO: show upload failure
-        this.resetCheckMark();
-        this.uploadingIndex = -1;
+        this.resetAllSelectedTextUnitsInCurrentPage();
     }
 
-    resetCheckMark() {
-        this.textUnitSelectedForScreenshot[this.uploadingIndex].fill(false);
+    selectAllTextUnitsInCurrentPage() {
+        this.textUnitChecked.forEach(e => e.fill(true));
+        this.numberOfTextUnitChecked = this.totalTextUnitsInPage;
+    }
+
+    resetAllSelectedTextUnitsInCurrentPage() {
+        this.textUnitChecked.forEach(e => e.fill(false));
+        this.numberOfTextUnitChecked = 0;
+    }
+
+    fetchPreviousPage() {
+        if(this.currentPageNumber > 0) {
+            currentPageNumber--;
+            this.getBranches();
+        }
+    }
+
+    fetchNextPage() {
+        if(this.currentPageNumber < this.totalPages) {
+            currentPageNumber++;
+            this.getBranches();
+        }
     }
 }
 

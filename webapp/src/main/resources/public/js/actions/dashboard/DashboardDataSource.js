@@ -34,8 +34,8 @@ const DashboardDataSource = {
     },
 
     performUploadScreenshotImage: {
-        remote(dashboardStoreState ,index) {
-            let image = dashboardStoreState.images[index];
+        remote(dashboardStoreState) {
+            let image = dashboardStoreState.image;
             // TODO: get imageName and imageContent
             let imageName = image.file.name;
             let imageContent = image.imagePreviewUrl;
@@ -47,7 +47,8 @@ const DashboardDataSource = {
 
     performUploadScreenshot: {
         remote(dashboardStoreState) {
-            let screenshotRun = ScreenshotRun.branchStatisticsToScreenshotRun(dashboardStoreState.dashboardRows[dashboardStoreState.uploadingIndex], dashboardStoreState.images[dashboardStoreState.uploadingIndex]);
+
+            let screenshotRun = ScreenshotRun.branchStatisticsToScreenshotRun(dashboardStoreState.branchStatistics[dashboardStoreState.uploadingIndex], dashboardStoreState.image);
             return ScreenshotClient.createOrUpdateScreenshotRun(screenshotRun)
         },
         success: DashboardPageActions.uploadScreenshotSuccess,

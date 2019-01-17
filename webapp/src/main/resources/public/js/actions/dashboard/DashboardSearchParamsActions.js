@@ -6,7 +6,8 @@ class DashboardSearchParamsActions {
         this.generateActions(
             "changeSearchFilter",
             "changeSearchText",
-            "resetDashboardSearchParams"
+            "resetDashboardSearchParams",
+
         );
     }
 }

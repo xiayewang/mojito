@@ -14,10 +14,16 @@ class DashboardPageActions {
             "uploadScreenshot",
             "uploadScreenshotSuccess",
             "uploadScreenshotError",
-            "textUnitForScreenshotUploadChanged",
-            "onTextunitCollapseChange",
-            "onScreenshotCollapseChange",
-            "onImageChoose"
+            "textUnitCheckboxChanged",
+            "onBranchCollapseChange",
+            "onScreenshotUploadModalOpen",
+            "onScreenshotUploadModalClose",
+            "onImageChoose",
+            "selectAllTextUnitsInCurrentPage",
+            "resetAllSelectedTextUnitsInCurrentPage",
+            "fetchPreviousPage",
+            "fetchNextPage"
+
         );
     }
 }
