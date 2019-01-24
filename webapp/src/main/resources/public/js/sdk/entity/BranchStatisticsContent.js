@@ -1,4 +1,5 @@
 import Branch from "./Branch"
+import BranchTextUnitStatistics from "./BranchTextUnitStatistics";
 
 export default class BranchStatisticsContent {
     constructor() {
@@ -36,13 +37,15 @@ export default class BranchStatisticsContent {
     }
 
     static toContent(json) {
-        let result = new branchStatisticsContent();
+        let result = new BranchStatisticsContent();
 
-        result.id = json.id;
-        result.branch = Branch.toBranch(json.branch);
-        result.branchTextUnitStatistics = BranchStatisticsContent.toBranchTextUnitStatisticsList(json.branchTextUnitStatistics);
-        result.forTranslationCount = json.forTranslationCount;
-        result.totalCount = json.totalCount;
+        if (json) {
+            result.id = json.id;
+            result.branch = Branch.toBranch(json.branch);
+            result.branchTextUnitStatistics = BranchTextUnitStatistics.toBranchTextUnitStatisticsList(json.branchTextUnitStatistics);
+            result.forTranslationCount = json.forTranslationCount;
+            result.totalCount = json.totalCount;
+        }
 
 
         return result;
@@ -55,8 +58,10 @@ export default class BranchStatisticsContent {
     static toContents(jsons) {
         let results = [];
 
-        for (let json of jsons) {
-            results.push(this.toContent(json));
+        if (jsons && jsons.length > 0) {
+            for (let json of jsons) {
+                results.push(this.toContent(json));
+            }
         }
 
         return results;
